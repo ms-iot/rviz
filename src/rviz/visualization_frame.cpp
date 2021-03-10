@@ -382,9 +382,11 @@ void VisualizationFrame::initialize(const QString& display_config_file)
 
 void VisualizationFrame::initConfigs()
 {
-  home_dir_ = QDir::toNativeSeparators(QDir::homePath()).toStdString();
+  std::wstring home_dir_wstring = QDir::toNativeSeparators(QDir::homePath()).toStdWString();
+  fs::path home_dir_path(home_dir_wstring);
+  home_dir_ = home_dir_path.string();
 
-  config_dir_ = (fs::path(home_dir_) / ".rviz").string();
+  config_dir_ = (home_dir_path / ".rviz").string();
   persistent_settings_file_ = (fs::path(config_dir_) / "persistent_settings").string();
   default_display_config_file_ = (fs::path(config_dir_) / "default." CONFIG_EXTENSION).string();
 
